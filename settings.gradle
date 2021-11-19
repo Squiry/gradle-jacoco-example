@@ -1,0 +1,4 @@
+rootProject.name = 'gradle-plugins-demo'
+
+include 'submodule1'
+include 'submodule2'

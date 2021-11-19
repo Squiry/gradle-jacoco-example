@@ -1,0 +1,31 @@
+plugins {
+    id 'jacoco'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+def jacococ = tasks.register("rootCoverageVerification", JacocoCoverageVerification.class) { JacocoCoverageVerification root ->
+    root.violationRules {
+        rule {
+            limit {
+                minimum = 0.75
+            }
+        }
+    }
+    subprojects { Project subproject ->
+        root.sourceSets(subproject.sourceSets.main)
+        subproject.tasks.withType(JacocoReport.class) { JacocoReport jacoco ->
+            root.executionData.from(subproject.fileTree('build').matching {
+                include 'jacoco/*.exec'
+            })
+            root.dependsOn(jacoco)
+        }
+    }
+
+}
+
